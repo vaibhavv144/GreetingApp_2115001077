@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Web;
 using BusinessLayer.Interface;
-using BusinessLayer.Services;
+using BusinessLayer.Service;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Services;
 using Microsoft.OpenApi.Models;
@@ -24,6 +24,8 @@ try
 
     // Add services to the container.
     builder.Services.AddControllers();
+    builder.Services.AddScoped<IGreetingBL, GreetingBL>();
+    builder.Services.AddScoped<IGreetingRL, GreetingRL>();
 
 
     // Configure Swagger
