@@ -187,5 +187,23 @@ namespace HelloGreetingApplication.Controllers
             string greetingMessage = _greetingBL.GetGreeting(firstName, lastName);
             return Ok(new { Message = greetingMessage });
         }
+
+
+        //UC4
+        [HttpPost]
+        [Route("save")]
+        public IActionResult SaveGreeting([FromBody] GreetingModel greetingModel)
+        {
+
+            var result=_greetingBL.AddGreetingBL(greetingModel);
+
+            var response = new ResponseModel<object>
+            {
+                Success = true,
+                Message = "Added Greeting",
+                Data = result
+            };
+            return Created("Added Greeting",response); 
+        }
     }
 }
