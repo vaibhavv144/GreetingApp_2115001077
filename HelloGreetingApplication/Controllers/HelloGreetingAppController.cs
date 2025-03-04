@@ -178,5 +178,14 @@ namespace HelloGreetingApplication.Controllers
         {
             return Ok(_greetingBL.GetGreetingBL());
         }
+
+        //UC3
+        [HttpGet("hello")]
+        public IActionResult GetGreeting([FromQuery] string? firstName, [FromQuery] string? lastName)
+        {
+
+            string greetingMessage = _greetingBL.GetGreeting(firstName, lastName);
+            return Ok(new { Message = greetingMessage });
+        }
     }
 }

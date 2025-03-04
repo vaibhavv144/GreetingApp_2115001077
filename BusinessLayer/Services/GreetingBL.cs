@@ -23,5 +23,35 @@ namespace BusinessLayer.Service
         {
             return "Hello World";
         }
+        //UC3
+        public string GetGreeting(string? firstName, string? lastName)
+        {
+
+            string greetingMessage;
+
+            if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
+            {
+                greetingMessage = $"Hello {firstName} {lastName}!";
+            }
+            else if (!string.IsNullOrEmpty(firstName))
+            {
+                greetingMessage = $"Hello {firstName}!";
+            }
+            else if (!string.IsNullOrEmpty(lastName))
+            {
+                greetingMessage = $"Hello {lastName}!";
+            }
+            else
+            {
+                greetingMessage = "Hello, World!";
+            }
+
+            return greetingMessage;
+        }
+
+        public string GetGreeting()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
