@@ -1,3 +1,4 @@
+using BusinessLayer.Interface;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.Model;
 using NLog; // Import NLog namespace
@@ -12,6 +13,12 @@ namespace HelloGreetingApplication.Controllers
     public class HelloGreetingAppController : ControllerBase
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly IGreetingBL _greetingBL;
+        public HelloGreetingAppController(IGreetingBL greetingBL)
+        {
+            _greetingBL = greetingBL;
+        }
+
 
         List<UserModel> users = new List<UserModel> {
             new UserModel { Id = 1, FirstName = "Sid",LastName="Sahay", Email = "sid@gmail.com",Password="sid123" },
@@ -163,6 +170,13 @@ namespace HelloGreetingApplication.Controllers
                 Success = true,
                 Message = "User deleted successfully"
             });
+        }
+
+        //UC2
+        [HttpGet("Greeting")]
+        public IActionResult GetGreeting()
+        {
+            return Ok(_greetingBL.GetGreetingBL());
         }
     }
 }
