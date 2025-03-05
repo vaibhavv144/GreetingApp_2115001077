@@ -1,5 +1,6 @@
 using BusinessLayer.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ModelLayer.Model;
 using NLog; // Import NLog namespace
 
@@ -261,5 +262,33 @@ namespace HelloGreetingApplication.Controllers
                 return StatusCode(500, response);
             }
         }
+
+        //UC7
+        [HttpPut("EditGreeting/{id}")]
+        public IActionResult EditGreeting(int id, GreetingModel greetModel)
+        {
+            ResponseModel<GreetingModel> response = new ResponseModel<GreetingModel>();
+            try
+            {
+                var result = _greetingBL.EditGreetingBL(id, greetModel);
+                if (result != null)
+                {
+                    response.Success = true;
+                    response.Message = "Greeting Message Updated Successfully";
+                    response.Data = result;
+                    return Ok(response);
+                }
+                response.Success = false;
+                response.Message = "Greeting Message Not Found";
+                return NotFound(response);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = $"An error occurred: {ex.Message}";
+                return StatusCode(500, response);
+            }
+        }
+
     }
 }

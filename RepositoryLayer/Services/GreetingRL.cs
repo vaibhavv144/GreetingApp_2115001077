@@ -62,5 +62,20 @@ namespace RepositoryLayer.Service
         {
             return _dbContext.Greet.ToList();  // Fetching All Data from Database
         }
+
+
+        //UC7
+        public GreetEntity EditGreetingRL(int id, GreetingModel greetingModel)
+        {
+            var entity = _dbContext.Greet.FirstOrDefault(g => g.Id == id);
+            if (entity != null)
+            {
+                entity.Message = greetingModel.Message;
+                _dbContext.Greet.Update(entity);
+                _dbContext.SaveChanges();
+                return entity; // Returning the updated Entity
+            }
+            return null; // If not found
+        }
     }
 }

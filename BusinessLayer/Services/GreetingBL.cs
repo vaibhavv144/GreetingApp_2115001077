@@ -84,6 +84,22 @@ namespace BusinessLayer.Service
             return null;
         }
 
+        //UC7
+        public GreetingModel EditGreetingBL(int id, GreetingModel greetingModel)
+        {
+            var result = _greetingRL.EditGreetingRL(id, greetingModel); // Calling Repository Layer
+            if (result != null)
+            {
+                return new GreetingModel()
+                {
+                    Id = result.Id,
+                    Message = result.Message
+                };
+            }
+            return null;
+        }
+
+
 
     }
 }
