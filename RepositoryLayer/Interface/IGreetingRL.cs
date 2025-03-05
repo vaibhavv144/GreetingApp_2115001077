@@ -11,6 +11,8 @@ namespace RepositoryLayer.Interface
     public interface IGreetingRL
     {
         GreetEntity AddGreetingRL(GreetingModel greetingModel);
-        public GreetingModel GetGreetingByIdRL(int Id);
+        GreetingModel GetGreetingByIdRL(int Id);
+
+        List<GreetEntity> GetAllGreetingsRL();
     }
 }

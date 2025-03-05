@@ -17,6 +17,8 @@ namespace BusinessLayer.Interface
 
         GreetingModel GetGreetingByIdBL(int Id);
 
+        List<GreetingModel> GetAllGreetingsBL();
+
 
 
 
