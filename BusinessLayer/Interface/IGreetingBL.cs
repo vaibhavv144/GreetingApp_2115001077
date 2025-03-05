@@ -21,7 +21,7 @@ namespace BusinessLayer.Interface
 
         GreetingModel EditGreetingBL(int id, GreetingModel greetingModel);
 
-
+        bool DeleteGreetingBL(int id);
 
 
     }
