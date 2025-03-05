@@ -40,5 +40,21 @@ namespace RepositoryLayer.Service
 
             return existingMessage;
         }
+
+        //UC5
+        public GreetingModel GetGreetingByIdRL(int Id)
+        {
+            var entity = _dbContext.Greet.FirstOrDefault(g => g.Id == Id);
+
+            if (entity != null)
+            {
+                return new GreetingModel()
+                {
+                    Id = entity.Id,
+                    Message = entity.Message
+                };
+            }
+            return null;
+        }
     }
 }
