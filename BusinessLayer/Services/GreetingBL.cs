@@ -58,8 +58,8 @@ namespace BusinessLayer.Service
         //UC4
         public GreetEntity AddGreetingBL(GreetingModel greetingModel)
         {
-            var result = _greetingRL.AddGreetingRL(greetingModel);
-            return result;
+                var result = _greetingRL.AddGreetingRL(greetingModel);
+                return result;
         }
 
         //UC5
