@@ -12,8 +12,9 @@ using RepositoryLayer.Service;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer.Contexts;
-using BusinessLayer.Services;
+using BusinessLayer.Service;
 using RepositoryLayer.Services;
+using MiddleWare.JwtHelper;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Info("Starting up the application");
@@ -49,6 +50,8 @@ try
     builder.Services.AddScoped<IGreetingRL, GreetingRL>();
     builder.Services.AddScoped<IUserBL, UserBL>();
     builder.Services.AddScoped<IUserRL, UserRL>();
+
+    builder.Services.AddSingleton<JwtTokenHelper>();
 
 
     // Configure Swagger

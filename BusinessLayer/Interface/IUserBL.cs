@@ -11,6 +11,7 @@ namespace BusinessLayer.Interface
     public interface IUserBL
     {
         UserEntity RegistrationBL(RegisterDTO registerDTO);
-        UserEntity LoginnUserBL(LoginDTO loginDTO);
+        // UserEntity LoginnUserBL(LoginDTO loginDTO);
+        (UserEntity user, string token) LoginnUserBL(LoginDTO loginDTO);
     }
 }
