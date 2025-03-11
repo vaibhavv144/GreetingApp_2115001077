@@ -16,6 +16,7 @@ namespace RepositoryLayer.Contexts
         public GreetingAppContext(DbContextOptions<GreetingAppContext> options) : base(options) { }
 
         public virtual DbSet<GreetEntity> Greet { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
     }
 
 }
