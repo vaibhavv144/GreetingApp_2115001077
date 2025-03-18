@@ -46,6 +46,9 @@ try
     builder.Services.AddDbContext<GreetingAppContext>(options =>
         options.UseSqlServer(connectionString));
 
+
+    builder.Services.AddScoped<Middleware.Email.SMTP>();
+
     builder.Services.AddScoped<IGreetingBL, GreetingBL>();
     builder.Services.AddScoped<IGreetingRL, GreetingRL>();
     builder.Services.AddScoped<IUserBL, UserBL>();

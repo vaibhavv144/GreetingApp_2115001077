@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Contexts;
 using ModelLayer.Model;
-using RepositoryLayer.Entity;
+using ModelLayer.Entity;
 
 namespace RepositoryLayer.Service
 {

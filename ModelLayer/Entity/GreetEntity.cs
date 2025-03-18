@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RepositoryLayer.Entity
+namespace ModelLayer.Entity
 {
     public class GreetEntity
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using ModelLayer.DTO;
 using Microsoft.Extensions.Logging;
-using RepositoryLayer.Entity;
+using ModelLayer.Entity;
 using RepositoryLayer.Interface;
 using BusinessLayer.Interface;
 using MiddleWare.JwtHelper;
@@ -54,7 +54,7 @@ namespace BusinessLayer.Service
                 if (user != null)
                 {
                     _logger.LogInformation("Login successful for user: {Email}", loginDTO.Email);
-                    var token = _jwtTokenHelper.GenerateToken(user);
+                    var token = _jwtTokenHelper.GenerateToken(user.Email);
                     return (user, token);
                 }
 
@@ -66,6 +66,27 @@ namespace BusinessLayer.Service
                 _logger.LogError(ex, "Error during login for {Email}", loginDTO.Email);
                 throw;
             }
+        }
+
+        public bool UpdateUserPassword(string email, string newPassword)
+        {
+            // Lookup user by email
+            var user = _userRL.FindByEmail(email);
+            if (user == null) return false;
+
+            // Hash and update the password
+            user.Password = newPassword;
+            return _userRL.Update(user);
+        }
+        public UserEntity GetByEmail(string email)
+        {
+            return _userRL.FindByEmail(email);
+        }
+
+
+        public bool ValidateEmail(string email)
+        {
+            return _userRL.ValidateEmail(email);
         }
     }
 }

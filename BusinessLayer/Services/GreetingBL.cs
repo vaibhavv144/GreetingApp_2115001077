@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BusinessLayer.Interface;
 using ModelLayer.Model;
-using RepositoryLayer.Entity;
+using ModelLayer.Entity;
 using RepositoryLayer.Interface;
 
 namespace BusinessLayer.Service

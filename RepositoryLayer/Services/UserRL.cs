@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging; // ✅ Correct Logging
 using ModelLayer.DTO;
-using RepositoryLayer.Entity;
+using ModelLayer.Entity;
 using RepositoryLayer.Contexts;
 using MiddleWare.HashingAlgo;
 using RepositoryLayer.Interface;
@@ -83,6 +83,29 @@ namespace RepositoryLayer.Services
                 _logger.LogError(ex, "Error occurred during login for {Email}", loginDTO.Email);
                 throw;
             }
+        }
+
+        public bool ValidateEmail(string email)
+        {
+            var data = _dbContext.Users.FirstOrDefault(e => e.Email == email);
+
+            if (data == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public UserEntity FindByEmail(string email)
+        {
+            return _dbContext.Users.FirstOrDefault(e => e.Email == email);
+        }
+
+        public bool Update(UserEntity user)
+        {
+            _dbContext.Users.Update(user);
+            _dbContext.SaveChanges();
+            return true;
         }
     }
 }
