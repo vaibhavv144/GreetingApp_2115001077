@@ -5,7 +5,7 @@ using MimeKit;
 using Microsoft.Extensions.Configuration;
 using System.Net.Mail;
 
-namespace Middleware.Email
+namespace MiddleWare.Email
 {
     public class SMTP
     {

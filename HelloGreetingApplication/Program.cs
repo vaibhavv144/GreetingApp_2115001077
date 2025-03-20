@@ -15,6 +15,8 @@ using RepositoryLayer.Contexts;
 using BusinessLayer.Service;
 using RepositoryLayer.Service;
 using MiddleWare.JwtHelper;
+using MiddleWare.RabbitMQClient;
+using StackExchange.Redis;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Info("Starting up the application");
@@ -29,6 +31,13 @@ try
 
     // Add services to the container.
     builder.Services.AddControllers();
+
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = builder.Configuration.GetConnectionString("Redis");
+        options.InstanceName = "GreetingApp_";
+    });
+    builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost:6379"));
 
     // Retrieve connection string
     var connectionString = builder.Configuration.GetConnectionString("GreetingAppDB");
@@ -47,7 +56,8 @@ try
         options.UseSqlServer(connectionString));
 
 
-    builder.Services.AddScoped<Middleware.Email.SMTP>();
+    builder.Services.AddScoped<MiddleWare.Email.SMTP>();
+    builder.Services.AddScoped<IRabbitMQService,RabbitMQService>();
 
     builder.Services.AddScoped<IGreetingBL, GreetingBL>();
     builder.Services.AddScoped<IGreetingRL, GreetingRL>();

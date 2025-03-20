@@ -2,13 +2,13 @@
 using ModelLayer.DTO;
 using NLog;
 using BusinessLayer.Interface;
-using Middleware.Email;
+using MiddleWare.Email;
 using MiddleWare.HashingAlgo;
 using MiddleWare.JwtHelper;
 using ModelLayer.Model;
 using System.Security.Claims;
 using Microsoft.IdentityModel.JsonWebTokens;
-
+using MiddleWare.RabbitMQClient;
 namespace HelloGreetingApplication.Controllers
 {
     [Route("api/[controller]")]
@@ -20,13 +20,15 @@ namespace HelloGreetingApplication.Controllers
         private readonly JwtTokenHelper _jwtTokenHelper;
         private readonly IConfiguration _configuration;
         private readonly SMTP _smtp;
+        private readonly IRabbitMQService _rabbitMQService;
 
-        public UserController(IUserBL userBL, JwtTokenHelper _jwtTokenHelper, SMTP _smtp, IConfiguration configuration)
+        public UserController(IUserBL userBL, JwtTokenHelper _jwtTokenHelper, SMTP _smtp, IConfiguration configuration, IRabbitMQService _rabbitMQService)
         {
             this._jwtTokenHelper = _jwtTokenHelper;
             this._smtp = _smtp;
             _userBL = userBL ?? throw new ArgumentNullException(nameof(userBL), "UserBL cannot be null."); // Ensures userBL is not null
             _configuration = configuration;
+            this._rabbitMQService = _rabbitMQService;
         }
 
         [HttpPost("registerUser")]
@@ -45,6 +47,8 @@ namespace HelloGreetingApplication.Controllers
                 }
 
                 _logger.Info($"User registered successfully: {registerDTO.Email}");
+                string email = registerDTO.Email;
+                _rabbitMQService.SendMessage(email + ", You have succeffuly Registered & LoggedIn!!");
                 return Created("user registered", new { Success = true, Message = "User registered successfully." });
             }
             catch (Exception ex)
@@ -70,6 +74,7 @@ namespace HelloGreetingApplication.Controllers
                 }
 
                 _logger.Info($"User {loginDTO.Email} logged in successfully.");
+                _rabbitMQService.ReceiveMessage();
                 return Ok(new
                 {
                     Success = true,
