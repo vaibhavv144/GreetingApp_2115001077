@@ -13,7 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using RepositoryLayer.Contexts;
 using BusinessLayer.Service;
-using RepositoryLayer.Services;
+using RepositoryLayer.Service;
 using MiddleWare.JwtHelper;
 
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();

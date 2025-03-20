@@ -2,115 +2,143 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BusinessLayer.Interface;
 using ModelLayer.Model;
 using ModelLayer.Entity;
 using RepositoryLayer.Interface;
+using NLog;
 
 namespace BusinessLayer.Service
 {
+    /// <summary>
+    /// Business Layer class for Greeting functionalities
+    /// </summary>
     public class GreetingBL : IGreetingBL
     {
         private readonly IGreetingRL _greetingRL;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Constructor for GreetingBL
+        /// </summary>
+        /// <param name="greetingRL"></param>
         public GreetingBL(IGreetingRL greetingRL)
         {
             _greetingRL = greetingRL;
         }
-
+        //UC2
+        /// <summary>
+        /// Returns a simple Hello World message
+        /// </summary>
+        /// <returns>String</returns>
         public string GetGreetingBL()
-
         {
             return "Hello World";
         }
+
         //UC3
+        /// <summary>
+        /// Generates a greeting message based on provided first and last name
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <returns>Formatted greeting message</returns>
         public string GetGreeting(string? firstName, string? lastName)
         {
+            try
+            {
+                string greetingMessage;
 
-            string greetingMessage;
+                if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
+                {
+                    greetingMessage = $"Hello {firstName} {lastName}!";
+                }
+                else if (!string.IsNullOrEmpty(firstName))
+                {
+                    greetingMessage = $"Hello {firstName}!";
+                }
+                else if (!string.IsNullOrEmpty(lastName))
+                {
+                    greetingMessage = $"Hello {lastName}!";
+                }
+                else
+                {
+                    greetingMessage = "Hello, World!";
+                }
 
-            if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName))
-            {
-                greetingMessage = $"Hello {firstName} {lastName}!";
+                Logger.Info("Generated greeting message: {0}", greetingMessage);
+                return greetingMessage;
             }
-            else if (!string.IsNullOrEmpty(firstName))
+            catch (Exception ex)
             {
-                greetingMessage = $"Hello {firstName}!";
+                Logger.Error(ex, "Error while generating greeting message.");
+                throw;
             }
-            else if (!string.IsNullOrEmpty(lastName))
-            {
-                greetingMessage = $"Hello {lastName}!";
-            }
-            else
-            {
-                greetingMessage = "Hello, World!";
-            }
-
-            return greetingMessage;
         }
 
-        public string GetGreeting()
-        {
-            throw new NotImplementedException();
-        }
         //UC4
-        public GreetEntity AddGreetingBL(GreetingModel greetingModel)
+        public GreetEntity SaveGreetingBL(GreetingModel greetingModel)
         {
-                var result = _greetingRL.AddGreetingRL(greetingModel);
-                return result;
+            Logger.Info("Saving greeting: {0}", greetingModel.Message);
+            var result = _greetingRL.SaveGreetingRL(greetingModel);
+            return result;
         }
 
         //UC5
+
         public GreetingModel GetGreetingByIdBL(int Id)
         {
+            Logger.Info("Fetching greeting by ID: {0}", Id);
             return _greetingRL.GetGreetingByIdRL(Id);
         }
 
-        //UC6
 
+
+
+
+        //UC6
         public List<GreetingModel> GetAllGreetingsBL()
         {
-            var entityList = _greetingRL.GetAllGreetingsRL();  // Calling Repository Layer
+            Logger.Info("Fetching all greetings.");
+            var entityList = _greetingRL.GetAllGreetingsRL();
             if (entityList != null)
             {
                 return entityList.Select(g => new GreetingModel
                 {
                     Id = g.Id,
-                    Message = g.Message
-                }).ToList();  // Converting List of Entity to List of Model
+                    Message = g.Message,
+                    Uid = g.UserId // Ensure Uid is included
+                }).ToList();
             }
             return null;
         }
 
+
+
         //UC7
         public GreetingModel EditGreetingBL(int id, GreetingModel greetingModel)
         {
-            var result = _greetingRL.EditGreetingRL(id, greetingModel); // Calling Repository Layer
+            Logger.Info("Editing greeting ID: {0}", id);
+            var result = _greetingRL.EditGreetingRL(id, greetingModel);
             if (result != null)
             {
                 return new GreetingModel()
                 {
                     Id = result.Id,
-                    Message = result.Message
+                    Message = result.Message,
+                    Uid = result.UserId // Ensure Uid is returned
                 };
             }
             return null;
         }
 
+
         //UC8
         public bool DeleteGreetingBL(int id)
         {
+            Logger.Info("Deleting greeting ID: {0}", id);
             var result = _greetingRL.DeleteGreetingRL(id);
-            if (result)
-            {
-                return true; // Successfully Deleted
-            }
-            return false; // Not Found
+            return result;
         }
-
-
-
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +10,6 @@ namespace RepositoryLayer.Interface
 {
     public interface IUserRL
     {
-        //UC10
         UserEntity Registration(RegisterDTO registerDTO);
         UserEntity LoginnUserRL(LoginDTO loginDTO);
         public bool ValidateEmail(string email);

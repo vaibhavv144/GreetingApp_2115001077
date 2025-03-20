@@ -1,95 +1,166 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Contexts;
 using ModelLayer.Model;
 using ModelLayer.Entity;
+using NLog;
 
 namespace RepositoryLayer.Service
 {
+    /// <summary>
+    /// GreetingRL Class inheriting IGreetingRL
+    /// </summary>
     public class GreetingRL : IGreetingRL
-
     {
+        /// <summary>
+        /// Creating DBContext of GreetingApp
+        /// </summary>
         private readonly GreetingAppContext _dbContext;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Creating GreetingRL constructor
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public GreetingRL(GreetingAppContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-
         }
-        public GreetEntity AddGreetingRL(GreetingModel greetingModel)
+
+        // UC4 - Save Greeting
+        public GreetEntity SaveGreetingRL(GreetingModel greetingModel)
         {
-            var existingMessage = _dbContext.Greet.FirstOrDefault<GreetEntity>(e => e.Id == greetingModel.Id);
-            if (existingMessage == null)
+            try
             {
+                bool userExists = _dbContext.Users.Any(u => u.UserId == greetingModel.Uid);
+                if (!userExists)
+                {
+                    Logger.Warn("User with ID: {0} not found. Cannot save greeting.", greetingModel.Uid);
+                    return null;
+                }
+
                 var newMessage = new GreetEntity
                 {
-                    
-
                     Message = greetingModel.Message,
+                    UserId = greetingModel.Uid // Ensure UserId is assigned
                 };
+
                 _dbContext.Greet.Add(newMessage);
                 _dbContext.SaveChanges();
 
+                Logger.Info("Greeting saved successfully with ID: {0}", newMessage.Id);
                 return newMessage;
             }
-
-
-            return existingMessage;
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error while saving greeting.");
+                throw;
+            }
         }
 
-        //UC5
+        // UC5 - Get Greeting by ID
         public GreetingModel GetGreetingByIdRL(int Id)
         {
-            var entity = _dbContext.Greet.FirstOrDefault(g => g.Id == Id);
-
-            if (entity != null)
+            try
             {
-                return new GreetingModel()
+                var entity = _dbContext.Greet.FirstOrDefault(g => g.Id == Id);
+                if (entity != null)
                 {
-                    Id = entity.Id,
-                    Message = entity.Message
-                };
+                    Logger.Info("Greeting fetched successfully for ID: {0}", Id);
+                    return new GreetingModel
+                    {
+                        Id = entity.Id,
+                        Message = entity.Message,
+                        Uid = entity.UserId // Ensure Uid is included
+                    };
+                }
+                Logger.Warn("Greeting not found for ID: {0}", Id);
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error while fetching greeting by ID: {0}", Id);
+                throw;
+            }
         }
-        
-        //UC6
+
+        // UC6 - Get All Greetings
         public List<GreetEntity> GetAllGreetingsRL()
         {
-            return _dbContext.Greet.ToList();  // Fetching All Data from Database
+            try
+            {
+                var greetings = _dbContext.Greet.ToList();
+                Logger.Info("Fetched all greetings successfully. Total Count: {0}", greetings.Count);
+                return greetings;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error while fetching all greetings.");
+                throw;
+            }
         }
 
-
-        //UC7
+        // UC7 - Edit Greeting
         public GreetEntity EditGreetingRL(int id, GreetingModel greetingModel)
         {
-            var entity = _dbContext.Greet.FirstOrDefault(g => g.Id == id);
-            if (entity != null)
+            try
             {
-                entity.Message = greetingModel.Message;
-                _dbContext.Greet.Update(entity);
-                _dbContext.SaveChanges();
-                return entity; // Returning the updated Entity
+                bool userExists = _dbContext.Users.Any(u => u.UserId == greetingModel.Uid);
+                if (!userExists)
+                {
+                    Logger.Warn("User with ID: {0} not found. Cannot update greeting.", greetingModel.Uid);
+                    return null;
+                }
+
+                var entity = _dbContext.Greet.FirstOrDefault(g => g.Id == id);
+                if (entity != null)
+                {
+                    entity.Message = greetingModel.Message;
+                    entity.UserId = greetingModel.Uid; // Ensure UserId is updated
+
+                    _dbContext.Greet.Update(entity);
+                    _dbContext.SaveChanges();
+
+                    Logger.Info("Greeting updated successfully for ID: {0}", id);
+                    return entity;
+                }
+
+                Logger.Warn("Greeting not found for ID: {0} to update", id);
+                return null;
             }
-            return null; // If not found
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error while updating greeting with ID: {0}", id);
+                throw;
+            }
         }
 
-        
-        //UC8
+        // UC8 - Delete Greeting
         public bool DeleteGreetingRL(int id)
         {
-            var entity = _dbContext.Greet.FirstOrDefault(g => g.Id == id);
-            if (entity != null)
+            try
             {
-                _dbContext.Greet.Remove(entity);
-                _dbContext.SaveChanges();
-                return true; // Successfully Deleted
+                var entity = _dbContext.Greet.FirstOrDefault(g => g.Id == id);
+                if (entity != null)
+                {
+                    _dbContext.Greet.Remove(entity);
+                    _dbContext.SaveChanges();
+                    Logger.Info("Greeting deleted successfully for ID: {0}", id);
+                    return true;
+                }
+                Logger.Warn("Greeting not found for ID: {0} to delete", id);
+                return false;
             }
-            return false; // Not Found
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Error while deleting greeting with ID: {0}", id);
+                throw;
+            }
         }
     }
 }

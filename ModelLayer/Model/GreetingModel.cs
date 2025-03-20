@@ -8,8 +8,8 @@ namespace ModelLayer.Model
 {
     public class GreetingModel
     {
-
         public int Id { get; set; }
         public string Message { get; set; }
+        public int Uid { get; set; }
     }
 }

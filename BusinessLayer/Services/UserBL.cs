@@ -5,6 +5,7 @@ using ModelLayer.Entity;
 using RepositoryLayer.Interface;
 using BusinessLayer.Interface;
 using MiddleWare.JwtHelper;
+using MiddleWare.JwtHelper;
 
 namespace BusinessLayer.Service
 {
@@ -18,7 +19,7 @@ namespace BusinessLayer.Service
         {
             _logger = logger;
             _userRL = userRL;
-            _jwtTokenHelper = jwtTokenHelper; // ✅ Assign JWT Helper
+            _jwtTokenHelper = jwtTokenHelper;
         }
 
         public UserEntity RegistrationBL(RegisterDTO registerDTO)
@@ -54,7 +55,7 @@ namespace BusinessLayer.Service
                 if (user != null)
                 {
                     _logger.LogInformation("Login successful for user: {Email}", loginDTO.Email);
-                    var token = _jwtTokenHelper.GenerateToken(user.Email);
+                    var token = _jwtTokenHelper.GenerateToken(user);
                     return (user, token);
                 }
 
@@ -78,11 +79,11 @@ namespace BusinessLayer.Service
             user.Password = newPassword;
             return _userRL.Update(user);
         }
+
         public UserEntity GetByEmail(string email)
         {
             return _userRL.FindByEmail(email);
         }
-
 
         public bool ValidateEmail(string email)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,8 @@ namespace RepositoryLayer.Interface
 {
     public interface IGreetingRL
     {
-        GreetEntity AddGreetingRL(GreetingModel greetingModel);
+        GreetEntity SaveGreetingRL(GreetingModel greetingModel);
+
         GreetingModel GetGreetingByIdRL(int Id);
 
         List<GreetEntity> GetAllGreetingsRL();

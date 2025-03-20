@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,10 @@ namespace BusinessLayer.Interface
     public interface IGreetingBL
     {
         string GetGreetingBL();
+
         string GetGreeting(string? firstName, string? lastName);
 
-        GreetEntity AddGreetingBL(GreetingModel greetingModel);
-
+        GreetEntity SaveGreetingBL(GreetingModel greetingModel);
         GreetingModel GetGreetingByIdBL(int Id);
 
         List<GreetingModel> GetAllGreetingsBL();
@@ -22,7 +23,5 @@ namespace BusinessLayer.Interface
         GreetingModel EditGreetingBL(int id, GreetingModel greetingModel);
 
         bool DeleteGreetingBL(int id);
-
-
     }
 }

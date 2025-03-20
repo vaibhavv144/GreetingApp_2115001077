@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging; // ✅ Correct Logging
@@ -7,8 +8,9 @@ using ModelLayer.Entity;
 using RepositoryLayer.Contexts;
 using MiddleWare.HashingAlgo;
 using RepositoryLayer.Interface;
+using MiddleWare.HashingAlgo;
 
-namespace RepositoryLayer.Services
+namespace RepositoryLayer.Service
 {
     public class UserRL : IUserRL
     {

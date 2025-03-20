@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace RepositoryLayer.Contexts
 
         public virtual DbSet<GreetEntity> Greet { get; set; }
         public DbSet<UserEntity> Users { get; set; }
+
     }
 
 }

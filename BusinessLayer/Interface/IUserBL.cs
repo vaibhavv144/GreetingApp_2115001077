@@ -16,6 +16,7 @@ namespace BusinessLayer.Interface
         public bool ValidateEmail(string email);
 
         public bool UpdateUserPassword(string email, string newPassword);
+
         public UserEntity GetByEmail(string email);
     }
 }
